@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ${app_name}
+  labels:
+    app: ${app_name}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ${app_name}
+  template:
+    metadata:
+      labels:
+        app: ${app_name}
+    spec:
+      containers:
+        - name: primary
+          image: ${image}
+          ports:
+            - containerPort: 55450
+              protocol: TCP
+          envFrom:
+            - configMapRef:
+                name: ${app_name}-config
+            - secretRef:
+                name: ${app_name}-secret
+          resources:
+            limits:
+              memory: 200Mi
+            requests:
+              memory: 100Mi
+      imagePullSecrets:
+        - name: harbor-regcred
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ${app_name}
+spec:
+  selector:
+    app: ${app_name}
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 55450
+  type: ClusterIP
+---
+

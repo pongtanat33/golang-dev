@@ -1,0 +1,12 @@
+bases:
+  - ../../base
+images:
+  - name: ${image}
+    newTag: "${imageTag}"
+nameSuffix: -staging
+commonLabels:
+  app: ${app_name}-staging
+patchesStrategicMerge:
+  - patch.yaml
+  - secret.yaml
+  - configmap.yaml

@@ -1,0 +1,6 @@
+package constants
+
+const (
+	EMISSION_END_DATE = "9456-12-01T00:00:00.000Z"
+	IS_CALCULATED_FACTOR_VALUE = 1
+)
