@@ -3,18 +3,15 @@ package servers
 import (
 	"log"
 
-	"bufferbox_backend_go/configs"
-	"bufferbox_backend_go/pkg/utils"
-
 	"github.com/jmoiron/sqlx"
 
 	"github.com/gofiber/fiber/v2"
 )
 
 type Server struct {
-	App *fiber.App
-	Cfg *configs.Configs
-	Db  *sqlx.DB
+	App             *fiber.App
+	Cfg             *configs.Configs
+	Db              *sqlx.DB
 	AuthEndpointURL string
 }
 
