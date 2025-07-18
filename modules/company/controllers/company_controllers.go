@@ -1,13 +1,6 @@
 package controllers
 
 import (
-	"bufferbox_backend_go/constants"
-	"bufferbox_backend_go/entities"
-	"bufferbox_backend_go/logs"
-	"bufferbox_backend_go/middlewares"
-	"bufferbox_backend_go/pkg/utils"
-	"strconv"
-
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -21,38 +14,6 @@ func NewCompanyController(group *fiber.Group, companyUsecase entities.CompanyUse
 	}
 	group.Use(middlewares.VerifyToken)
 
-	group.Get("/company", middlewares.TicketExpiredVerify, company.CompanyValue)
-	group.Post("/company", company.CompanyCreate)
-	group.Patch("/company", middlewares.RoleCompanyVerify, company.CompanyUpdate)
-	group.Delete("/company", middlewares.RoleCompanyVerify, company.CompanyDelete)
-
-	group.Get("/company-group-by-name", company.CompanyGroupsByName)
-	group.Get("/company-group-lists", company.CompanyGroups)
-	group.Get("/company-site-lists", company.CompanySites)
-	group.Get("/company-selected-site-lists", company.CompanySelectedSites)
-	group.Get("/company-lists", company.CompanyLists)
-	group.Get("/company-group-site", company.CompanyGroupSites)
-
-	group.Get("/:company/target_base/", company.CompanyTargetBase)
-	group.Get("/:company/target_base/:base", company.CompanyTargetBaseById)
-	group.Post("/:company/target_base/", company.CompanyTargetBaseUpsert)
-	group.Patch("/:company/target_base/", company.CompanyTargetBaseUpsert)
-	group.Delete("/:company/target_base/:base", company.CompanyTargetBaseDelete)
-
-	group.Get("/:company/target/", company.CompanyTargetAll)
-	group.Get("/:company/target/:target", company.CompanyTargetById)
-
-	//Package Feature Verify + Role Company Verify
-	group.Post("/:company/target/", middlewares.RoleCompanyVerify, middlewares.PackageFeatureVerify, company.CompanyTargetUpsert)
-	group.Patch("/:company/target/", middlewares.RoleCompanyVerify, middlewares.PackageFeatureVerify, company.CompanyTargetUpsert)
-	group.Delete("/:company/target/:target", middlewares.RoleCompanyVerify, middlewares.PackageFeatureVerify, company.CompanyTargetDelete)
-	group.Patch("/company-main-target", middlewares.RoleCompanyVerify, company.CompanyMainTargetUpdate)
-
-	group.Get("/company-member", company.CompanyMember)
-	group.Delete("/company-member", middlewares.RoleCompanyVerify, company.CompanyMemberDelete)
-	group.Patch("/company-member", middlewares.RoleCompanyVerify, company.CompanyMemberChange)
-
-	//group.Get("/company-test", middlewares.TicketExpiredVerify, company.TestCompanyValue)
 }
 
 func (cp *companyController) CompanyMemberDelete(c *fiber.Ctx) error {

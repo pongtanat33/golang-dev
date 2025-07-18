@@ -1,8 +1,6 @@
 package usecases
 
-import (
-	"bufferbox_backend_go/entities"
-)
+import ()
 
 type addressDataUse struct {
 	AddressDataRepo entities.AddressDataRepository
@@ -14,19 +12,18 @@ func NewAddressDataUsecase(addressDataRepo entities.AddressDataRepository) entit
 	}
 }
 
-func (a *addressDataUse) CountryMasterData() ([]entities.CountryRes, error){
-	countrys , err := a.AddressDataRepo.CountryMasterData()
+func (a *addressDataUse) CountryMasterData() ([]entities.CountryRes, error) {
+	countrys, err := a.AddressDataRepo.CountryMasterData()
 	if err != nil {
 		return nil, err
 	}
-	return countrys , nil
+	return countrys, nil
 }
 
-func (a *addressDataUse) ProvinceMasterData(req *entities.ProvinceReq) ([]entities.ProvinceRes, error){
-	provinces , err := a.AddressDataRepo.ProvinceMasterData(req)
+func (a *addressDataUse) ProvinceMasterData(req *entities.ProvinceReq) ([]entities.ProvinceRes, error) {
+	provinces, err := a.AddressDataRepo.ProvinceMasterData(req)
 	if err != nil {
 		return nil, err
 	}
-	return provinces , nil
+	return provinces, nil
 }
-

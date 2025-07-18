@@ -1,13 +1,8 @@
 package controllers
 
 import (
-	"bufferbox_backend_go/constants"
-	"bufferbox_backend_go/entities"
-	"bufferbox_backend_go/logs"
-	"bufferbox_backend_go/middlewares"
-	"bufferbox_backend_go/pkg/utils"
-	"strings"
 	"context"
+	"strings"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -22,40 +17,6 @@ func NewActivityTaskController(group *fiber.Group, activityTaskUsecase entities.
 	}
 	group.Use(middlewares.VerifyToken)
 
-	// 1. Assingment Page
-	assingment := group.Group("/assingment").(*fiber.Group)
-	assingment.Get("/company/:company_id/site/:site_id/task-status", activityTask.ActivityTaskListBySite)
-	assingment.Get("/company/:company_id/site/:site_id/task-assign", activityTask.ActivityTaskAssignBySite)
-	assingment.Get("/company/:company_id/site/:site_id/task-history", activityTask.ActivityTaskHistoryLists)
-	assingment.Get("/company/:company_id/site/:site_id/activity/:activity_id/activity-member", activityTask.ActivityMember)
-	assingment.Delete("/company/:company_id/site/:site_id/activity/:activity_id/activity-member", activityTask.ActivityMemberDelete)
-
-	// 2. Issue Side || Importer
-	issueSide := constants.TaskIssueSide
-	issue := group.Group("/" + issueSide).(*fiber.Group)
-	issue.Use(middlewares.SetTaskSideBySubGroup(issueSide))
-	issue.Get("/", activityTask.AssignmentListByUser)
-	issue.Get("/company/:company_id/site/:site_id/activities", activityTask.ActivityAssignmentListBySite)
-	issue.Get("/company/:company_id/site/:site_id/activity/:activity_id/tasks", activityTask.ActivityTaskListByActivity)
-	issue.Get("/company/:company_id/site/:site_id/activity/:activity_id/task/:task_id/sub-tasks", activityTask.ActivitySubTaskLists)
-	issue.Post("/company/:company_id/site/:site_id/activity/:activity_id/create-task", activityTask.CreateNewActivityTask)
-	issue.Delete("/company/:company_id/site/:site_id/activity/:activity_id/task/:task_id/delete-task", activityTask.DeleteActivityTask)
-	issue.Post("/company/:company_id/site/:site_id/activity/:activity_id/task/:task_id/create-sub-task", activityTask.CreateNewActivitySubTask)
-	issue.Delete("/company/:company_id/site/:site_id/activity/:activity_id/task/:task_id/sub-task/:sub_task_id/delete-sub-task", activityTask.DeleteActivitySubTask)
-	issue.Patch("/company/:company_id/site/:site_id/activity/:activity_id/task/:task_id/sub-task/:sub_task_id/edit-sub-task", activityTask.UpdateActivitySubTask)
-	issue.Patch("/company/:company_id/site/:site_id/activity/:activity_id/task/:task_id/submit-task", activityTask.SubmitActivityTask)
-
-	// 3. Receive Side || Checker
-	receiveSide := constants.TaskReceiveSide
-	receive := group.Group("/" + receiveSide).(*fiber.Group)
-	receive.Use(middlewares.SetTaskSideBySubGroup(receiveSide))
-	receive.Get("/", activityTask.AllActivityTaskListByUser)
-	receive.Get("/company/:company_id/site/:site_id/task/:task_id/sub-tasks", activityTask.ActivitySubTaskLists)
-	receive.Get("/company/:company_id/site/:site_id/task/:task_id/sub-tasks-verify", activityTask.VerifyActivitySubTask)
-	receive.Delete("/company/:company_id/site/:site_id/task/:task_id/sub-task/:sub_task_id/delete-sub-task", activityTask.DeleteActivitySubTask)
-	receive.Patch("/company/:company_id/site/:site_id/task/:task_id/edit-task-status", activityTask.UpdateActivityTaskStatus)
-	receive.Patch("/company/:company_id/site/:site_id/task/:task_id/approve-task-status", middlewares.RoleActivityVerify, activityTask.ApproveActivityTaskStatus)
-	receive.Patch("/company/:company_id/site/:site_id/task/:task_id/close-task-status", middlewares.RoleActivityVerify, activityTask.CloseActivityTaskStatus)
 }
 
 func (a *activityTaskController) ActivityMemberDelete(c *fiber.Ctx) error {
@@ -171,7 +132,7 @@ func (a *activityTaskController) ApproveActivityTaskStatus(c *fiber.Ctx) error {
 	if _, removeErr := utils.RemoveAllDataFromRedisByCompany(context.Background(), c.Locals("company_id").(string)); removeErr != nil {
 		logs.Error(removeErr)
 	}
-	
+
 	return utils.HandleResponse(c, fiber.StatusOK, "update_activity_task_status_successfully", fiber.Map{
 		"status":      "OK",
 		"status_code": fiber.StatusOK,

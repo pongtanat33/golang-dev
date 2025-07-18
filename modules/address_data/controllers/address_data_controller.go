@@ -1,11 +1,6 @@
 package controllers
 
 import (
-	"bufferbox_backend_go/logs"
-	"bufferbox_backend_go/middlewares"
-	"bufferbox_backend_go/entities"
-	"bufferbox_backend_go/pkg/utils"
-
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -17,9 +12,6 @@ func NewAddressDataController(group *fiber.Group, addressDataUsecase entities.Ad
 	addressData := &addressDataController{
 		AddressDataUsecase: addressDataUsecase,
 	}
-
-	group.Get("/country-master", middlewares.VerifyToken, addressData.CountryMasterData)
-	group.Get("/province-master", middlewares.VerifyToken, addressData.ProvinceMasterData)
 
 }
 

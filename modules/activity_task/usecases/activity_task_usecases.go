@@ -1,13 +1,5 @@
 package usecases
 
-import (
-	"bufferbox_backend_go/constants"
-	"bufferbox_backend_go/entities"
-	"bufferbox_backend_go/logs"
-	"bufferbox_backend_go/pkg/utils"
-	"fmt"
-)
-
 type activityTaskUse struct {
 	ActivityTaskRepo entities.ActivityTaskRepository
 	AttachmantRepo   entities.AttachmentRepository
@@ -211,8 +203,8 @@ func (u *activityTaskUse) CloseActivityTask(req *entities.UpdateTaskStatusReq) e
 	// delete all sub-task
 	delReq := &entities.DeleteTaskReq{
 		ActivityId: taskFound.ActivityId,
-		TaskId: req.TaskId,
-		User:   req.User,
+		TaskId:     req.TaskId,
+		User:       req.User,
 	}
 	if err := u.ActivityTaskRepo.DeleteActivityAllSubTaskByTaskId(delReq); err != nil {
 		logs.Error(err)

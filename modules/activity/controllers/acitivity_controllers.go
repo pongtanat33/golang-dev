@@ -1,10 +1,6 @@
 package controllers
 
 import (
-	"bufferbox_backend_go/entities"
-	"bufferbox_backend_go/logs"
-	"bufferbox_backend_go/middlewares"
-	"bufferbox_backend_go/pkg/utils"
 	"context"
 	"fmt"
 	"strconv"
@@ -20,46 +16,6 @@ func NewActivityController(group *fiber.Group, activityUsecase entities.Activity
 	activity := &activityController{
 		ActivityUsecase: activityUsecase,
 	}
-	group.Get("/activity-lists", middlewares.VerifyToken, middlewares.RoleSiteVerify, activity.ActivityLists)
-
-	group.Get("/activity", middlewares.VerifyToken, middlewares.RoleSiteVerify, activity.ActivityValueById)
-	group.Post("/activity", middlewares.VerifyToken, middlewares.RoleSiteVerify, activity.CreateActivity)
-	group.Patch("/activity", middlewares.VerifyToken, middlewares.RoleSiteVerify, activity.UpdateActivity)
-	group.Delete("/activity", middlewares.VerifyToken, middlewares.RoleSiteVerify, activity.DeleteActivity)
-
-	// Activity Sync to scope3
-	group.Get("/activity-available-sync", middlewares.VerifyToken, activity.GetActivityAvailableSyncBySite)
-	group.Get("/activity-sync-connection", middlewares.VerifyToken, activity.CheckActivitySyncConnection)
-	group.Delete("/activity-sync-by-source", middlewares.VerifyToken, activity.DeleteActivitySyncBySource)
-
-	group.Post("/activity-sync", middlewares.VerifyToken, middlewares.RoleSiteVerify, activity.CreateActivitySync)
-	group.Get("/activity-sync", middlewares.VerifyToken, middlewares.RoleSiteVerify, activity.GetActivitySyncBySite)
-	group.Delete("/activity-sync", middlewares.VerifyToken, middlewares.RoleSiteVerify, activity.DeleteActivitySync)
-
-	group.Post("/duplicate-activity", middlewares.VerifyToken, activity.DuplicateActivity)
-	group.Patch("/restore-activity", middlewares.VerifyToken, middlewares.RoleSiteVerify, activity.RestoreActivity)
-
-	group.Post("/activity-by-scope", middlewares.VerifyToken, activity.ActivityByScope)
-	// group.Post("/activity-by-scope-emission", middlewares.VerifyToken, activity.ActivityByScopeEmission)
-
-	group.Get("/activity-transaction", middlewares.VerifyToken, activity.ActivityTransaction)
-	group.Post("/activity-transaction", middlewares.VerifyToken, middlewares.RoleSiteVerify, activity.CreateActivityTransaction)
-	group.Patch("/activity-transaction", middlewares.VerifyToken, middlewares.RoleSiteVerify, activity.UpdateActivityTransaction)
-	group.Delete("/activity-transaction", middlewares.VerifyToken, middlewares.RoleSiteVerify, activity.DeleteActivityTransaction)
-	group.Get("/activity-transaction-by-date", middlewares.VerifyToken, activity.ActivityTransactionByDate)
-	group.Post("/activity-with-custom-emission", middlewares.VerifyToken, middlewares.RoleSiteVerify, activity.CreateActivityWithCustomizedEmission)
-	group.Patch("/activity-with-custom-emission", middlewares.VerifyToken, middlewares.RoleSiteVerify, activity.UpdateActivityWithCustomizedEmission)
-	group.Get("/scope-lists", middlewares.VerifyToken, activity.Scopelist)
-
-	//Package Feature Verify + Role Company Verify
-	group.Post("/check-billing-info", middlewares.VerifyToken, middlewares.PackageFeatureVerify, activity.CheckBillingInfo)
-	group.Get("/activity-auto-scope2", middlewares.VerifyToken, middlewares.PackageFeatureVerify, activity.ActivityPeaEmissionValueById)
-	group.Post("/activity-auto-scope2", middlewares.VerifyToken, middlewares.RoleSiteVerify, middlewares.PackageFeatureVerify, activity.CreateActivityAutoScope2)
-	group.Patch("/activity-auto-scope2", middlewares.VerifyToken, middlewares.RoleSiteVerify, middlewares.PackageFeatureVerify, activity.UpdateActivityAutoScope2)
-	group.Delete("/disconnect-bill", middlewares.VerifyToken, middlewares.RoleSiteVerify, middlewares.PackageFeatureVerify, activity.DisconnectBill)
-	group.Patch("/bill-connect", middlewares.VerifyToken, activity.UpdateBillConnect)
-	group.Post("/activity-with-recepi-emission", middlewares.VerifyToken, middlewares.RoleSiteVerify, activity.CreateActivityWithRecepiEmission)
-	group.Patch("/activity-with-recepi-emission", middlewares.VerifyToken, middlewares.RoleSiteVerify, activity.UpdateActivityWithRecepiEmission)
 
 }
 
